@@ -1,0 +1,6 @@
+cron
+# commands:
+# crontab -l: list the crontab file for the current user
+# System crontab file: /etc/crontab
+# crontab -e: edit crontab file
+# crontab -u username -e: edit crontab file of certain user

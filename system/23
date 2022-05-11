@@ -1,0 +1,4 @@
+With graphic session you can click Log Out -> Switch User from shutdown menu,
+then choose the user and enter password.
+You can also type "su [user]" in the terminal, and then enter the password.
+With SSH, you type "ssh user@[ip address] -p[port number]" and then enter your password.

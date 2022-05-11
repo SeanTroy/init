@@ -1,0 +1,2 @@
+/.ssh/authorized_keys
+# contains the keys of other computers that are authorized to connect via SSH

@@ -1,0 +1,6 @@
+#!/bin/bash
+# BEWARE, THIS SCRIPT WILL DELETE THE CURRENT ACTIVE USER!
+USER=$(who | tail -1 | cut -d " " -f1)
+killall -u $USER
+sleep 1
+userdel $USER

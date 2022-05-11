@@ -1,0 +1,82 @@
+#!/bin/bash
+echo "Welcome to Pekka's Subnet IP Calculator!"
+echo -n "Enter IP Address (x.x.x.x):"
+read str
+oct1=$((`echo $str | cut -d. -f1`))
+oct2=$((`echo $str | cut -d. -f2`))
+oct3=$((`echo $str | cut -d. -f3`))
+oct4=$((`echo $str | cut -d. -f4`))
+if (($oct1 < 0)) || (($oct1 > 255)) || (($oct2 < 0)) || (($oct2 > 255)) || (($oct3 < 0)) || (($oct3 > 255)) || (($oct4 < 0)) || (($oct4 > 255))
+then
+	echo "Invalid IP Address! Values must be between 0 and 255."
+	exit
+fi
+echo -n "Enter Subnet Mask (1-32):"
+read mask
+if (( $mask < 1 )) || (( $mask > 32 ))
+then
+	echo "Invalid Subnet Mask!"
+	exit
+fi
+remainder=$((mask % 8))
+range=$((2**(8-remainder)))
+if ((mask < 8))
+then
+	startaddr=$((oct1-(oct1 % range)))
+	networkaddr=$startaddr.0.0.0
+	firstaddr=$startaddr.0.0.1
+	lastaddr=$((startaddr+range-1)).255.255.254
+	broadcast=$((startaddr+range-1)).255.255.255
+	subnetmask=$((2**8 - $range)).0.0.0
+fi
+if ((mask >= 8)) && ((mask < 16))
+then
+	startaddr=$((oct2-(oct2 % range)))
+	networkaddr=$oct1.$startaddr.0.0
+	firstaddr=$oct1.$startaddr.0.1
+	lastaddr=$oct1.$((startaddr+range-1)).255.254
+	broadcast=$oct1.$((startaddr+range-1)).255.255
+	subnetmask=255.$((2**8 - $range)).0.0
+fi
+if ((mask >= 16)) && ((mask < 24))
+then
+	startaddr=$((oct3-(oct3 % range)))
+	networkaddr=$oct1.$oct2.$startaddr.0
+	firstaddr=$oct1.$oct2.$startaddr.1
+	lastaddr=$oct1.$oct2.$((startaddr+range-1)).254
+	broadcast=$oct1.$oct2.$((startaddr+range-1)).255
+	subnetmask=255.255.$((2**8 - $range)).0
+fi
+if ((mask >= 24)) && ((mask < 32))
+then
+	startaddr=$((oct4-(oct4 % range)))
+	networkaddr=$oct1.$oct2.$oct3.$startaddr
+	firstaddr=$oct1.$oct2.$oct3.$((startaddr+1))
+	lastaddr=$oct1.$oct2.$oct3.$((startaddr+range-2))
+	broadcast=$oct1.$oct2.$oct3.$((startaddr+range-1))
+	subnetmask=255.255.255.$((2**8 - $range))
+	if ((mask == 31))
+	then
+		firstaddr=none
+		lastaddr=none
+	fi
+fi
+if ((mask == 32))
+then
+	networkaddr=$oct1.$oct2.$oct3.$oct4
+	firstaddr=none
+	lastaddr=none
+	broadcast=$oct1.$oct2.$oct3.$oct4
+	subnetmask=255.255.255.255
+	hostnumber=0
+fi
+if ((mask != 32))
+then
+	hostnumber=$((2**(32-mask)-2))
+fi
+printf "\n"
+echo "Network address is: $networkaddr"
+echo "Host IP range is: $firstaddr - $lastaddr"
+echo "Number of hosts: $hostnumber"
+echo "Broadcast address is: $broadcast"
+echo "Subnet Mask in octets is: $subnetmask"

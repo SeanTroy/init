@@ -1,0 +1,3 @@
+NAT server address: 10.60.1.1
+# First step in traceroute is our router, the second step is the NAT server which translates
+# the private IP to public IP.

@@ -1,0 +1,3 @@
+/etc/hostname
+# and if thats not enough, also:
+# /etc/hosts
